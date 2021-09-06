@@ -1,2 +1,2 @@
-# Grafos-G3
-Proyecto para Grafos y Lenguajes Formales
+# Grafos Interactivos Grupo 3
+Creado con https://github.com/d3/d3
