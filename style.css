@@ -1,3 +1,75 @@
-h1 {
-  color: black;
+
+body, h1 {
+  color: white;
+  background: #252525;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.header {
+  overflow: hidden;
+  background-color: #474747;
+  padding: 5px 5px;
+  border-bottom: #303030 3px solid;
+}
+
+.header a, button {
+  float: left;
+  color: white;
+  text-align: center;
+  padding: 2px 4px;
+  text-decoration: none;
+  font-size: 15px;
+  line-height: 25px;
+  margin: 0 8px;
+  background: none;
+  border: 0;
+}
+
+.logo {
+  height: 25px;
+  width: 25px;
+  padding: 2px;
+  border-radius: 4px;
+  float: left;
+  filter: invert(1);
+}
+
+.logo:hover{
+  background-color: #dadada;
+}
+
+.header a:hover, button:hover, .activado {
+  background-color: #252525;
+  border-radius: 4px;
+}
+
+.header-derecha {
+  float: right;
+}
+
+.sidebar {
+  background: #474747;
+  overflow: hidden;
+  height: 100%;
+  width: 40px;
+  float: left;
+  border-top: #252525 4px solid;
+}
+
+.ticon {
+  width: 20px;
+  height: 20px;
+  filter: drop-shadow(0 0 0 #1c1c1c) invert(0.78);
+  padding: 4px 0;
+}
+
+@media screen and (max-width: 500px) {
+  .header a {
+    float: none;
+    display: block;
+    text-align: left;
+  }
+  .header-right {
+    float: none;
+  }
 }
