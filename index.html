@@ -1,21 +1,39 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
     <link rel="shortcut icon" href="img/graph.svg" type="image/x-icon">   
     <link rel="stylesheet" href="style.css">
-    <script src="https://d3js.org/d3.v7.min.js"></script>
     <!-- script src="https://raw.githubusercontent.com/AE-0/Grafos-G3/main/script.js"></script -->
-    <script src="./js/script.js"></script>
     <title>Grafos-G3</title>
 </head>
 <body>
     <div class="header">
         <img class="logo" src="./img/graph.svg" alt="Logo">
-        <button class="activado">Crear</button>
-        <button>limpiar</button>
+        <button class="tutorial">Tutorial</button>
+        <button class="crear activo">Crear</button>
+        <button class="visualizar">Visualizar</button>
+        <div class="header-middle">
+            <span class="spacing"></span>
+            <label class="toolOpciones">Flechas
+                <input type="checkbox" name="flechas">
+                <span class="checkmark"></span>
+            </label>
+            <button class="limpiar">Limpiar</button>
+        </div>
         <div class="header-derecha">
-            <a href="#about">acerca</a>
+            <button class="acerca">Acerca</button>
+            <div class="modal">
+                <div class="modal-info">
+                    <a href="https://github.com/AE-0/Grafos-G3">
+                        <img aria-hidden="true" style="position:absolute;top:0;right:0;border:0;filter:grayscale(1);user-select:none;" src="https://github.blog/wp-content/uploads/2008/12/forkme_right_darkblue_121621.png?resize=149%2C149" alt="Fork me on GitHub"></a>
+                    <p class="about-titulo">Proyecto Grafos</p>
+                    <img class="about-logo" src="./img/graph.svg" alt="Logo">
+                    <p class="source">Pagina web interactiva para la asignatura de Grafos y Lenguajes Formales 2021</p>
+                    <p>Licencia GNU GLP-3.0</p>
+                    <a href="https://github.com/AE-0/Grafos-G3/issues">Reportar un bug</a>
+                </div>
+            </div>
         </div>
     </div>
     <div class="sidebar">
@@ -29,7 +47,9 @@
             <img class="ticon" src="./img/borrar.png">
         </button>
     </div>
-    <h1>Hola Mundo!</h1>
-    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Repellendus voluptate facilis inventore atque porro fuga suscipit delectus non odio impedit eum reiciendis iusto assumenda, amet eligendi sed ipsam? Rem, dolore?</p>
+    <svg class="espacio">
+    </svg>
+    <script src="https://d3js.org/d3.v5.min.js"></script>
+    <script type="text/javascript" src="./js/script.js"></script>
 </body>
 </html>
