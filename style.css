@@ -73,6 +73,11 @@ button:hover, .activo {
   border-right:  #252525 3px solid;
   position: absolute;
 }
+.derecha {
+  float: right !important;
+  right: 0 !important;
+  width: 250px;
+}
 
 .tool {
   margin: 2px 4px;
@@ -124,8 +129,36 @@ button:hover, .activo {
 }
 
 .espacio {
-  float: right;
+  float: left;
+  position: absolute;
+  left: 43px;
 }
+
+.propiedades {
+  background: #303030;
+  display: block;
+  text-align: center;
+  border-bottom: 3px solid #252525;
+  color: #e8e8e8;
+  cursor: pointer;
+}
+
+.analisis {
+  width: 235px;
+  height: 180px;
+  background: #7d7d7d;
+  margin: 8px;
+}
+
+.analisis > * {
+  margin: 0;
+  text-align: center;
+}
+
+.matriz {
+  padding-top: 1px;
+}
+
 
 /* FIXING */
 .arista {

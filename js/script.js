@@ -1,19 +1,24 @@
-/*
+
 // Grafo hecho de ejemplo 
-var nodos = [{ id: 0 }, { id: 1 }, { id: 2 }];
+var nodos = [{ id: 0 }, { id: 1 }, { id: 2 }, {id: 3}];
 
 var vinculos = [
   { source: 0, target: 1 },
   { source: 0, target: 2 },
-  { source: 1, target: 2 }
+  { source: 1, target: 2 },
+  { source: 3, target: 2 }
 ];
-*/
+/*
 
 // Grafo vacio
 var nodos = [];
 var vinculos = [];
 
+*/
+var source = [], target = [];
 var ultimoNodo = nodos.length;
+let auxMatrix = [];
+
 
 var svg = d3.select(".espacio")
 svg.on("contextmenu", function() {
@@ -21,9 +26,9 @@ svg.on("contextmenu", function() {
 });
 
 var yoffset = 42;
-var xoffset = 43;
-var w = window.innerWidth, h = window.innerHeight, radio = 10;
-svg.attr("width", w - xoffset).attr("height", h - yoffset);
+var xoffset = 293;
+var w = window.innerWidth - xoffset, h = window.innerHeight - yoffset, radio = 10;
+svg.attr("width", w).attr("height", h);
 
 var dragLine = svg
   .append("path")
@@ -68,6 +73,61 @@ window.onclick = function(e) {
     modal.style.display = "none";
   }
 }
+
+// Boton Propiedades ("temporal")
+var propiedadesBtn = document.querySelector(".propiedades");
+propiedadesBtn.addEventListener("click", propiedades)
+
+var columm = null;
+
+var matricita = [];
+
+function propiedades() {
+  var nAristas = document.querySelector(".naristas");
+  nAristas.innerHTML = "Aristas: " + vinculos.length;
+  var nVertices = document.querySelector(".nvertices");
+  nVertices.innerHTML = "Vertices: " + nodos.length;
+
+  /*let aux = [];
+
+  for (let index = 0; index < vinculos.length; index++) {
+    columm = vinculos[index];
+    source.push(columm.source.index);
+    target.push(columm.target.index);
+    auxMatrix.push([index]);
+  }
+  for (let index = 0; index < nodos.length; index++) {
+    auxMatrix[index] = source[index] + "," + target[index];
+  }
+
+  for (let i = 0; i < matricita[0].length; i++) {
+    for (let j = 0; j < matricita[1].length; j++) {
+      matricita[i][j] = 0;
+      console.log(matricita[i][j]);
+    }
+    
+  }
+
+  var i = 0, j = 0;
+  matricita.push(source);
+  matricita.push(target);
+
+  while (i <= matricita.length) {
+    while (j <= matricita[0].length) {
+      console.log(matricita[i][j]);
+      j++;
+    }
+    j = 0;
+    i++;
+  }
+
+  matricita.forEach((matricita) =>{
+    //console.table(matricita)
+  });
+  */
+ 
+}
+
 
 // Boton Crear 
 var crearBtn = d3.select('button[name="crear"]');
@@ -284,7 +344,7 @@ function restart() {
       .append("circle")
       .attr("r", radio)
       .attr("class", "vertice")
-      .style("fill", "#d73380")
+      .style("fill", "#d73380") // Añadir funcion de colores
       .on("mousedown", beginDragLine)
       .on("mouseup", endDragLine)
       .on("contextmenu", borrarNodo);
