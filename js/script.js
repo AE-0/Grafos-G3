@@ -1,20 +1,20 @@
-
+/*
 // Grafo hecho de ejemplo 
 var nodos = [{ id: 0 }, { id: 1 }, { id: 2 }, {id: 3}];
 
 var vinculos = [
   { source: 0, target: 1 },
-  { source: 0, target: 2 },
   { source: 1, target: 2 },
+  { source: 2, target: 0 },
   { source: 3, target: 2 }
 ];
-/*
+*/
 
 // Grafo vacio
 var nodos = [];
 var vinculos = [];
 
-*/
+
 var source = [], target = [];
 var ultimoNodo = nodos.length;
 let auxMatrix = [];
@@ -81,14 +81,16 @@ propiedadesBtn.addEventListener("click", propiedades)
 var columm = null;
 
 var matricita = [];
+var matrioska = [];
 
 function propiedades() {
   var nAristas = document.querySelector(".naristas");
   nAristas.innerHTML = "Aristas: " + vinculos.length;
   var nVertices = document.querySelector(".nvertices");
   nVertices.innerHTML = "Vertices: " + nodos.length;
+  var barraderecha = document.querySelector(".derecha");
+  barraderecha.style.height = "calc(100% - 45px)";
 
-  /*let aux = [];
 
   for (let index = 0; index < vinculos.length; index++) {
     columm = vinculos[index];
@@ -96,36 +98,56 @@ function propiedades() {
     target.push(columm.target.index);
     auxMatrix.push([index]);
   }
-  for (let index = 0; index < nodos.length; index++) {
-    auxMatrix[index] = source[index] + "," + target[index];
-  }
-
-  for (let i = 0; i < matricita[0].length; i++) {
-    for (let j = 0; j < matricita[1].length; j++) {
-      matricita[i][j] = 0;
-      console.log(matricita[i][j]);
-    }
-    
-  }
-
-  var i = 0, j = 0;
   matricita.push(source);
   matricita.push(target);
 
-  while (i <= matricita.length) {
-    while (j <= matricita[0].length) {
-      console.log(matricita[i][j]);
-      j++;
+
+  for (let index = 0; index < nodos.length; index++) {
+    auxMatrix[index] = source[index] + "," + target[index];
+  }
+  
+  //Llena una matriz con 0's
+  for (let index = 0; index < nodos.length; index++) {
+    matrioska[index] = Array(nodos.length).fill(0)
+  }
+  
+  //Matriz funcionando
+  for (let index = 0; index <= nodos.length - 1; index++) {
+    for (let jndex = 0; jndex <= nodos.length - 1; jndex++) {
+      for (let kndex = 0; kndex <= source.length - 1; kndex++) {
+        for (let lndex = 0; lndex <= matricita.length - 1; lndex++) {
+          var m = matricita[lndex][kndex];
+          if (lndex == 0) {
+            mm = m;
+          }
+        }
+        matrioska[mm][m] = 1;
+      }
+      break;
     }
-    j = 0;
-    i++;
   }
 
-  matricita.forEach((matricita) =>{
-    //console.table(matricita)
-  });
-  */
- 
+  var tabla= "<table border=\"0\">";
+     
+  tabla += "<tr><td></td>";
+  for(let jndex = 0; jndex<nodos.length; jndex++){ 
+      tabla += "<td>" + (jndex + 1) + "</td>";
+  }
+  tabla+="</tr>";
+  
+  for(let index = 0; index < nodos.length; index++){
+      tabla += "<tr>";
+      tabla += "<td>" + (index+1) + "</td>";
+      for(let jndex = 0; jndex < nodos.length; jndex++){ 
+
+          tabla += "<td>" + matrioska[index][jndex] + "</td>";
+      }
+      tabla += "</tr>";
+  }
+  tabla += "</table>";
+
+  document.getElementById("matriz").innerHTML=tabla;
+
 }
 
 
@@ -293,8 +315,8 @@ function hideDragLine() {
 function endDragLine(d) {
   if (!mousedownNode || mousedownNode === d) return;
   //return if link already exists
-  for (let i = 0; i < vinculos.length; i++) {
-    var l = vinculos[i];
+  for (let index = 0; index < vinculos.length; index++) {
+    var l = vinculos[index];
     if (
       (l.source === mousedownNode && l.target === d) ||
       (l.source === d && l.target === mousedownNode)

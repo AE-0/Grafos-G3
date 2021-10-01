@@ -73,11 +73,6 @@ button:hover, .activo {
   border-right:  #252525 3px solid;
   position: absolute;
 }
-.derecha {
-  float: right !important;
-  right: 0 !important;
-  width: 250px;
-}
 
 .tool {
   margin: 2px 4px;
@@ -93,7 +88,7 @@ button:hover, .activo {
 .modal {
   display: none;
   position: fixed;
-  z-index: 1;
+  z-index: 2;
   width: 100%;
   height: 100%;
   overflow: hidden;
@@ -142,12 +137,23 @@ button:hover, .activo {
   color: #e8e8e8;
   cursor: pointer;
 }
+.derecha {
+  float: right !important;
+  right: 0 !important;
+  width: auto;
+  min-width: 250px;
+  z-index: 1;
+  height: auto;
+}
+
 
 .analisis {
-  width: 235px;
-  height: 180px;
+  width: auto;
+  height: auto;
   background: #7d7d7d;
   margin: 8px;
+  padding: 0 10px;
+  padding-block: 0 10px;
 }
 
 .analisis > * {
@@ -155,12 +161,36 @@ button:hover, .activo {
   text-align: center;
 }
 
-.matriz {
-  padding-top: 1px;
+.analisis > * {
+  text-align: center;
 }
 
+table {
+  display: -webkit-inline-box;
+  margin: 10px 0;
+}
 
-/* FIXING */
+tbody {
+  background: #474747;
+  padding: 4px;
+  display: block;
+}
+
+tbody > :first-child {
+  background: #303030;
+}
+
+td {
+  padding: 4px;
+  margin: 0 10px;
+  display: inline-table;
+}
+
+tr > :first-child {
+  background: #303030;
+  display: table-cell;
+}
+
 .arista {
   stroke: #999;
   stroke-width: 3.5px;
