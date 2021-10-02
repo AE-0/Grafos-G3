@@ -4,7 +4,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
     <link rel="shortcut icon" href="img/graph.svg" type="image/x-icon">   
     <link rel="stylesheet" href="style.css">
-    <!-- script src="https://raw.githubusercontent.com/AE-0/Grafos-G3/main/script.js"></script -->
+    <meta http-equiv="cache-control" content="no-cache" />
+    <meta http-equiv="Pragma" content="no-cache" />
+    <meta http-equiv="Expires" content="-1" />
     <title>Grafos-G3</title>
 </head>
 <body>
@@ -13,11 +15,20 @@
         <button class="tutorial">Tutorial</button>
         <button class="crear activo">Crear</button>
         <button class="visualizar">Visualizar</button>
+        <div class="modal-ingreso">
+            <div class="ingreso">
+                <span class="ingheader">Ingreso de datos</span>
+                <div class="input-grafo">
+                    <input  type="text" placeholder="ejemplo: [[0,1],[1,2]]" name="ginput">
+                    <button type="submit">submit</button>
+                </div>
+            </div>
+        </div>
         <div class="header-middle">
             <span class="spacing"></span>
-            <label class="toolOpciones">Flechas
-                <input type="checkbox" name="flechas">
-                <span class="checkmark"></span>
+            <label class="toolOpciones">
+                <input type="checkbox" name="numeros" checked="true">Numeros
+                <input type="checkbox" name="flechas" checked="true">Flechas
             </label>
             <button class="limpiar">Limpiar</button>
         </div>
@@ -50,10 +61,10 @@
     <div class="sidebar derecha">
         <span class="propiedades">Propiedades</span>
         <div class="analisis">
-            <div id="matriz"></div>
-            <p class="naristas"></p>
-            <p class="nvertices"></p>
+            <div class="matriz"></div>
         </div>
+        <p class="nvertices"></p>
+        <p class="naristas"></p>
     </div>
     <svg class="espacio">
     </svg>

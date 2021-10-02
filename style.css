@@ -28,7 +28,6 @@ button, .toolOpciones {
   border: 0;
   user-select: none;
 }
-
 .logo {
   height: 25px;
   width: 25px;
@@ -85,7 +84,7 @@ button:hover, .activo {
   filter: drop-shadow(0 0 0 #1c1c1c) invert(0.78);
 }
 
-.modal {
+.modal, .modal-ingreso {
   display: none;
   position: fixed;
   z-index: 2;
@@ -95,7 +94,6 @@ button:hover, .activo {
   background-color: rgba(0, 0, 0, 0.4);
   left: 0%;
   top: 0%;
-  transition: opacity 0.15s linear;
 }
 .modal-info {
   position: relative;
@@ -103,9 +101,46 @@ button:hover, .activo {
   margin: calc(9% + 30px) auto;
   padding: 20px;
   width: 35%;
-  transition: transform 0.3s ease-out;
   box-shadow: rgba(0, 0, 0, 0.6) 0px 8px 16px;
   min-width: 300px;
+}
+.ingreso {
+  position: relative;
+  background-color: 474747;
+  margin: calc(9% + 30px) auto;
+  width: 60%;
+  height: 14%;
+  box-shadow: rgba(0, 0, 0, 0.6) 0px 8px 16px;
+  min-width: 300px;
+}
+.ingheader {
+  text-align: center;
+  background: #303030;
+  display: block;
+  padding: 8px;
+  font-size: larger;
+  font-weight: lighter;
+}
+.input-grafo {
+  margin: 29px 0px;
+  display: flex;
+}
+input[name="ginput"] {
+  width: 100%;
+  padding: 4px;
+  background: #303030;
+  color: #e8e8e8;
+  border: 1px solid #555;
+  margin-left: 7px;
+}
+button[type="submit"] {
+  background: #303030;
+  float: right;
+  padding: 4px 10px;
+  border-radius: 4px;
+}
+button[type="submit"]:active {
+  background: #222;
 }
 .about-titulo {
   font-size: 1.7em;
@@ -136,24 +171,36 @@ button:hover, .activo {
   border-bottom: 3px solid #252525;
   color: #e8e8e8;
   cursor: pointer;
+  font-weight: lighter;
 }
 .derecha {
   float: right !important;
   right: 0 !important;
   width: auto;
-  min-width: 250px;
+  min-width: 132px;
   z-index: 1;
   height: auto;
 }
 
+.derecha > p {
+  text-align: center;
+  margin: 0;
+  background: #303030;
+  border-top: 3px solid #252525;
+  font-weight: lighter;
+}
 
-.analisis {
+.nvertices, .naristas {
+  text-decoration: underline dotted;
+  cursor: pointer;
+}
+
+.matriz {
   width: auto;
   height: auto;
   background: #7d7d7d;
   margin: 8px;
   padding: 0 10px;
-  padding-block: 0 10px;
 }
 
 .analisis > * {
@@ -181,9 +228,8 @@ tbody > :first-child {
 }
 
 td {
-  padding: 4px;
-  margin: 0 10px;
-  display: inline-table;
+  min-inline-size: 20px;
+  text-align: center;
 }
 
 tr > :first-child {
@@ -199,11 +245,14 @@ tr > :first-child {
   cursor: default;
 }
 
-.arista:hover, .dragLine {
+.arista:hover {
   stroke: #666;
-  stroke-width: 5px;
 }
+.dragLine {
+  stroke-width: 5px;
+  stroke: #666;
 
+}
 .vertice {
   cursor: pointer;
   stroke: #e8e8e8;
@@ -217,4 +266,14 @@ tr > :first-child {
 
 .dragLine.hidden {
   stroke-width: 0;
+}
+.seleccionado {
+  stroke-width: 3px;
+  stroke: #fff;
+  outline: 2px dashed darkorange;
+}
+.texto {
+  user-select: none;
+  fill: #fff;
+  font-size:  14px;
 }

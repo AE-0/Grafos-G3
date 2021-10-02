@@ -4,6 +4,7 @@ var nodos = [{ id: 0 }, { id: 1 }, { id: 2 }, {id: 3}];
 
 var vinculos = [
   { source: 0, target: 1 },
+  { source: 1, target: 0 },
   { source: 1, target: 2 },
   { source: 2, target: 0 },
   { source: 3, target: 2 }
@@ -35,9 +36,29 @@ var dragLine = svg
   .attr("class", "dragLine hidden")
   .attr("d", "M0,0L0,0");
 
-var aristas = svg.append("g").selectAll(".arista");
 
+const uuid = Math.floor(Math.random() * 1e9);
+
+svg
+  .append('defs')
+  .append('marker')
+  .attr('id', `arrowhead-${uuid}`)
+  .attr('viewBox', '-0 -5 10 10')
+  .attr('refX', 18)
+  .attr('refY', 0)
+  .attr('orient', 'auto')
+  .attr('markerWidth', 3)
+  .attr('markerHeight', 3)
+  .attr('xoverflow', 'visible')
+  .append('svg:path')
+  .attr('d', 'M 0,-5 L 10 ,0 L 0,5')
+  .attr('fill', "#999")
+  .attr('stroke', "#999");
+
+var aristas = svg.append("g").selectAll(".arista");
 var vertices = svg.append("g").selectAll(".vertice");
+var textos = svg.append("g").selectAll(".text");
+
 
 var force = d3
   .forceSimulation()
@@ -65,18 +86,46 @@ limpiarBtn.addEventListener("click", limpiarTodo);
 // Boton Acerca
 var acercaBtn = document.querySelector(".acerca");
 var modal = document.querySelector(".modal");
+var modalIng = document.querySelector(".modal-ingreso");
 acercaBtn.addEventListener("click", e => {
   modal.style.display = "block";
 })
 window.onclick = function(e) {
-  if (e.target == modal) {
+  if (e.target == modal || e.target == modalIng) {
     modal.style.display = "none";
+    modalIng.style.display = "none";
   }
+}
+
+// Boton Visualizar
+var visualizarBtn = document.querySelector(".visualizar");
+visualizarBtn.addEventListener("click", e => {
+  modalIng.style.display = "block";
+});
+var inputGrafos = document.querySelector('input[name="ginput"]')
+inputGrafos.addEventListener("onkeypress", e => {
+  e.preventDefault();
+  if (e.keyCode == 13) {ingresoDatos();}
+});
+var submit = document.querySelector('button[type="submit"]')
+submit.addEventListener("click", ingresoDatos)
+
+var stringcito;
+
+// Ingreso de nodos por texto
+function ingresoDatos() {
+  stringcito = inputGrafos.value;
+  var stringNodos = inputGrafos.value;
+
+  regexRule = /\[[0-9],[0-9]\]/;
+  var arrayNodos = [...stringcito.match(regexRule)]
+  console.log(arrayNodos);
+
 }
 
 // Boton Propiedades ("temporal")
 var propiedadesBtn = document.querySelector(".propiedades");
-propiedadesBtn.addEventListener("click", propiedades)
+propiedadesBtn.addEventListener("click", propiedades);
 
 var columm = null;
 
@@ -88,6 +137,19 @@ function propiedades() {
   nAristas.innerHTML = "Aristas: " + vinculos.length;
   var nVertices = document.querySelector(".nvertices");
   nVertices.innerHTML = "Vertices: " + nodos.length;
+  nVertices.addEventListener("mouseenter", e => {
+    document.querySelectorAll(".vertice").forEach(function(d){d.setAttribute("class", "vertice seleccionado");})
+    setTimeout(function(){
+      document.querySelectorAll(".vertice").forEach(function(d){d.setAttribute("class", "vertice");})
+    }, 500)
+  })
+  nAristas.addEventListener("mouseenter", e => {
+    document.querySelectorAll(".arista").forEach(function(d){d.setAttribute("class", "arista seleccionado");})
+    setTimeout(function(){
+      document.querySelectorAll(".arista").forEach(function(d){d.setAttribute("class", "arista");})
+    }, 500)
+  })
+
   var barraderecha = document.querySelector(".derecha");
   barraderecha.style.height = "calc(100% - 45px)";
 
@@ -100,7 +162,6 @@ function propiedades() {
   }
   matricita.push(source);
   matricita.push(target);
-
 
   for (let index = 0; index < nodos.length; index++) {
     auxMatrix[index] = source[index] + "," + target[index];
@@ -130,27 +191,47 @@ function propiedades() {
   var tabla= "<table border=\"0\">";
      
   tabla += "<tr><td></td>";
-  for(let jndex = 0; jndex<nodos.length; jndex++){ 
+  for(let jndex = 0; jndex<nodos.length; jndex++) { 
       tabla += "<td>" + (jndex + 1) + "</td>";
   }
   tabla+="</tr>";
   
-  for(let index = 0; index < nodos.length; index++){
+  for(let index = 0; index < nodos.length; index++) {
       tabla += "<tr>";
       tabla += "<td>" + (index+1) + "</td>";
-      for(let jndex = 0; jndex < nodos.length; jndex++){ 
-
+      for(let jndex = 0; jndex < nodos.length; jndex++) { 
           tabla += "<td>" + matrioska[index][jndex] + "</td>";
       }
       tabla += "</tr>";
   }
   tabla += "</table>";
 
-  document.getElementById("matriz").innerHTML=tabla;
-
+  document.querySelector(".matriz").innerHTML=tabla;
 }
 
+var numLabel = document.querySelector('input[name="numeros"]');
+numLabel.addEventListener("click", e => {
+  if (numLabel.checked == true) {
+    textos.style("display", "inline");
+  } else {
+    textos.style("display", "none");
+  }
+});
 
+
+var flechaCheck = document.querySelector('input[name="flechas"]');
+flechaCheck.addEventListener("click", e => {
+  if (flechaCheck.checked == true) {
+    document.querySelectorAll(".arista").forEach(function (d) {
+      d.setAttribute("marker-end", "url(#arrowhead-" + uuid + ")");
+    })
+      
+  } else {
+    document.querySelectorAll(".arista").forEach(function (d) {
+      d.setAttribute("marker-end", "");
+    })
+  }
+});
 // Boton Crear 
 var crearBtn = d3.select('button[name="crear"]');
 crearBtn.on("click", function(d) {
@@ -207,6 +288,18 @@ function tick() {
     .attr("cy", function(d) {
       return d.y;
     });
+  textos
+    .attr("x", function(d) {
+      if (d.id < 10) {
+        return d.x - 4;
+      } else {
+        return d.x - 9;
+      }
+    })
+    .attr("y", function(d) {
+      return d.y + 5;
+    });
+
 }
 
 // Vacia el grafo
@@ -214,6 +307,7 @@ function limpiarTodo() {
   nodos.splice(0);
   vinculos.splice(0);
   ultimoNodo = 0;
+  d3.selectAll("text").remove();
   restart();
 }
 
@@ -251,8 +345,11 @@ function añadirNodo() {
   }
 }
 
-function borrarNodo(d, i) {
+function borrarNodo(d, i) {  
+
   nodos.splice(nodos.indexOf(d), 1);
+  var texto1 = '.texto[id="', texto2= '"]';
+  var textoB = texto1 + nodos.indexOf(d) + texto2;
   var vinculosToRemove = vinculos.filter(function(l) {
     return l.source === d || l.target === d;
   });
@@ -260,6 +357,7 @@ function borrarNodo(d, i) {
     vinculos.splice(vinculos.indexOf(l), 1);
   });
   d3.event.preventDefault();
+  d3.select(textoB).remove()
   restart();
 }
 
@@ -339,6 +437,7 @@ function restart() {
     .enter()
     .append("line")
     .attr("class", "arista")
+    .attr('marker-end', `url(#arrowhead-${uuid})`)
     .on("mousedown", function() {
       d3.event.stopPropagation();
     })
@@ -377,6 +476,22 @@ function restart() {
 
     vertices = ve.merge(vertices);
   }
+
+  textos = textos.data(nodos, function(d) {
+    return d.id;
+  });
+
+  var te = textos
+    .enter()
+    .append("text")
+    .text(d => d.id)
+    .attr("class", "texto")
+    .attr("id", d => d.id)
+    .on("mousedown", beginDragLine)
+    .on("mouseup", endDragLine)
+    .on("contextmenu", borrarNodo);
+
+  textos = te.merge(textos);
 
   force.nodes(nodos);
   force.force("link").links(vinculos);
