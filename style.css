@@ -272,8 +272,14 @@ tr > :first-child {
   stroke: #fff;
   outline: 2px dashed darkorange;
 }
+.arselect {
+  stroke: darkorange;
+  stroke-dasharray: 5,6;
+}
 .texto {
+  cursor: pointer;
   user-select: none;
   fill: #fff;
   font-size:  14px;
+  stroke-width: 0.5px;
 }
