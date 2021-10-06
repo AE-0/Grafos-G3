@@ -19,7 +19,7 @@
             <div class="ingreso">
                 <span class="ingheader">Ingreso de datos</span>
                 <div class="input-grafo">
-                    <input  type="text" placeholder="ejemplo: [[0,1],[1,2]]" name="ginput">
+                    <input  type="text" placeholder="ejemplo: [[0,1],[1,2]] (debe partir de 0*)" name="ginput">
                     <button type="submit">ingresar</button>
                 </div>
             </div>
@@ -61,10 +61,22 @@
     <div class="sidebar derecha">
         <span class="propiedades">Propiedades</span>
         <div class="analisis">
-            <div class="matriz"></div>
+            <div class="matrizhide">
+                <img src="./img/bx-plus.svg" alt="mas">
+                <img src="./img/bx-minus.svg" alt="menos">
+            </div>
+            <span class="matrizmenu">Matrices</span>
+            <span class="label-ady">Matriz Adyacente</span>
+            <div class="matriz-ady"></div>
+            <span class="label-c">Matrices C</span>
+            <div class="matriz-c"></div>
         </div>
-        <p class="nvertices"></p>
-        <p class="naristas"></p>
+        <div class="na-nv">
+            <span>Vertices</span>
+            <span class="nvertices"></span>
+            <span>Aristas</span>
+            <span class="naristas"></span>
+        </div>
     </div>
     <svg class="espacio">
     </svg>

@@ -16,15 +16,16 @@ var nodos = [], vinculos = [];
 
 var source = [], target = [];
 var ultimoNodo = nodos.length;
-let auxMatrix = [], matricita = [], matrioska = [];
+var auxMatrix = [], matricita = [], matrioska = [], mIndentidad = [], mAnterior = [];
+var mcaminos = [], matrizRes = [], c = [];
 var columm = null;
 var colores =  d3.schemeDark2;
 const uuid = Math.floor(Math.random() * 1e9);
 var mousedownNode = null;
 var tool = null, seleccion = null;
-var yoffset = 42, xoffset = 177;
+var yoffset = 42, xoffset = 43;
 var w = window.innerWidth - xoffset, h = window.innerHeight - yoffset, radio = 12;
-var conexion = 0, caminocta = 0;
+var conexion = 0, caminocta = 0, vinculadosSimples = -1; 
 
 var svg = d3.select(".espacio")
 svg.attr("width", w).attr("height", h);
@@ -202,6 +203,54 @@ function limpiarTodo() {
   restart();
 }
 
+ document.querySelector(".matrizhide").addEventListener("click", e => {
+  var tablamatriz = document.querySelector(".matriz-ady")
+  var tablamatrizC = document.querySelector(".matriz-c")
+  var labelAdy = document.querySelector(".label-ady")
+  var labelC = document.querySelector(".label-c")
+  if (tablamatriz.style.display == "block") {
+    tablamatriz.style.display = "none";
+    tablamatrizC.style.display = "none";
+    labelAdy.style.display = "none";
+    labelC.style.display = "none";
+    document.querySelector('img[alt="menos"]').style.display = "none";
+    document.querySelector('img[alt="mas"]').style.display = "block";
+  } else {
+    tablamatriz.style.display = "block";
+    tablamatrizC.style.display = "block";
+    labelAdy.style.display = "block";
+    labelC.style.display = "block";
+    document.querySelector('img[alt="menos"]').style.display = "block";
+    document.querySelector('img[alt="mas"]').style.display = "none";
+  }
+});
+
+// Boton Propiedades
+document.querySelector(".propiedades").addEventListener("click", propiedades);
+var barraderecha = document.querySelector(".derecha");
+var nAristas = document.querySelector(".naristas");
+var nVertices = document.querySelector(".nvertices");
+var vinculosReales = new Array ( );
+var vinculoIndex = [];
+
+// Hover Vertices
+nVertices.addEventListener("mouseenter", e => {
+  document.querySelectorAll(".vertice").forEach(function(d){d.setAttribute("class", "vertice seleccionado");})
+  setTimeout(function(){
+    document.querySelectorAll(".vertice").forEach(function(d){d.setAttribute("class", "vertice");})
+  }, 500)
+})
+// Hover Aristas
+nAristas.addEventListener("mouseenter", e => {
+  document.querySelectorAll(".arista").forEach(function(d){d.setAttribute("class", "arista arselect");})
+  flecha.attr("stroke", "darkorange").attr("fill", "darkorange")
+  setTimeout(function(){
+    document.querySelectorAll(".arista").forEach(function(d){d.setAttribute("class", "arista");})
+    flecha.attr("stroke", "#999").attr("fill", "#999")
+  }, 500)
+})
+
+
 // Remueve enventos del mouse anteriores
 function cambioTool(toolname) {
   var toolBtn1 = 'button[name="', toolBtn2= '"]';
@@ -308,34 +357,77 @@ function endDragLine(d) {
   restart();
 }
 
-// Boton ("temporal")
-document.querySelector(".propiedades").addEventListener("click", propiedades);
+function nVinculos() {
+  var nvinculos = vinculosReales.length + 1;
+  var uno = 1, indexcta = 0, kndex = 0;
+  for (let index = 0; index < vinculoIndex.length; index++) {
+    kndex = index;
+    if (vinculoIndex[indexcta] == vinculosReales[index][uno]) {
+      index = 0;
+      for (let jndex = 0; jndex < 2; jndex++) {
+        if (vinculosReales[kndex][jndex] == vinculosReales[indexcta][uno]) {
+          nvinculos--;
+          vinculadosSimples++;
+        }
+      }
+      indexcta++;
+    }
+  }
+  return nvinculos;
+}
+
+function aristasVertices(){
+  for (let index = 0; index < vinculos.length; index++) {
+    for (let jndex = 0; jndex < vinculos.length; jndex++) {
+      if (index == jndex) {
+        vinculosReales[index] = new Array (vinculos[index].source.id , vinculos[jndex].target.id);
+      }
+    }
+  }
+  
+  console.table(vinculosReales);
+  for (let index = 0; index < vinculosReales.length; index++) {
+    for (let jndex = 0; jndex < vinculosReales.length; jndex++) {
+      if (jndex == 0) {
+        vinculoIndex[index] = vinculosReales[index][jndex];
+      }
+    }
+  }
+  nAristas.innerHTML = nVinculos();
+  nVertices.innerHTML = nodos.length;
+}
+
+function tabla(matriz) {
+  var tabla= "<table border=\"0\">";
+     
+  tabla += "<tr><td></td>";
+  for(let jndex = 0; jndex<nodos.length; jndex++) { 
+      tabla += "<td>" + (jndex + 1) + "</td>";
+  }
+  tabla+="</tr>";
+  
+  for(let index = 0; index < nodos.length; index++) {
+      tabla += "<tr>";
+      tabla += "<td>" + (index+1) + "</td>";
+      for(let jndex = 0; jndex < nodos.length; jndex++) { 
+          tabla += "<td>" + matriz[index][jndex] + "</td>";
+      }
+      tabla += "</tr>";
+  }
+  tabla += "</table>";
+
+  return tabla;
+
+}
 
 // Muestra las propiedades del grafo
+
 function propiedades() {
-  var nAristas = document.querySelector(".naristas");
-  nAristas.innerHTML = "Aristas: " + vinculos.length;
-  var nVertices = document.querySelector(".nvertices");
-  nVertices.innerHTML = "Vertices: " + nodos.length;
-
-  nVertices.addEventListener("mouseenter", e => {
-    document.querySelectorAll(".vertice").forEach(function(d){d.setAttribute("class", "vertice seleccionado");})
-    setTimeout(function(){
-      document.querySelectorAll(".vertice").forEach(function(d){d.setAttribute("class", "vertice");})
-    }, 500)
-  })
-  nAristas.addEventListener("mouseenter", e => {
-    document.querySelectorAll(".arista").forEach(function(d){d.setAttribute("class", "arista arselect");})
-    flecha.attr("stroke", "darkorange").attr("fill", "darkorange")
-    setTimeout(function(){
-      document.querySelectorAll(".arista").forEach(function(d){d.setAttribute("class", "arista");})
-      flecha.attr("stroke", "#999").attr("fill", "#999")
-    }, 500)
-  })
-
-  var barraderecha = document.querySelector(".derecha");
-  barraderecha.style.height = "calc(100% - 45px)";
-
+  
+  barraderecha.style.height = "auto";
+  
+  aristasVertices();
+  
   for (let index = 0; index < vinculos.length; index++) {
     columm = vinculos[index];
     source.push(columm.source.index);
@@ -349,10 +441,21 @@ function propiedades() {
     auxMatrix[index] = source[index] + "," + target[index];
   }
   
-  //Llena una matriz con 0's
+  // Llena una matriz con 0's
   for (let index = 0; index < nodos.length; index++) {
-    matrioska[index] = Array(nodos.length).fill(0)
+    matrioska[index] = Array(nodos.length).fill(0);
+    mIndentidad[index] = Array(nodos.length).fill(0);
+    matrizRes[index] = Array(nodos.length).fill(0);
   }
+  
+  //Matriz Indentidad
+  for (let index = 0; index < nodos.length; index++) {
+    for (let jndex = 0; jndex < nodos.length; jndex++) {
+      if (index == jndex) {
+        mIndentidad[index][jndex] = 1;
+      }
+    }    
+  }  
   
   //Matriz funcionando
   for (let jndex = 0; jndex <= nodos.length - 1; jndex++) {
@@ -368,35 +471,55 @@ function propiedades() {
     break;
   }
   
-  var tabla= "<table border=\"0\">";
-     
-  tabla += "<tr><td></td>";
-  for(let jndex = 0; jndex<nodos.length; jndex++) { 
-      tabla += "<td>" + (jndex + 1) + "</td>";
-  }
-  tabla+="</tr>";
+  var matrizAdy = tabla(matrioska);
+  document.querySelector(".matriz-ady").innerHTML = matrizAdy;
+  mAnterior = matrioska;
+  matrizCaminos(matrioska);
   
-  for(let index = 0; index < nodos.length; index++) {
-      tabla += "<tr>";
-      tabla += "<td>" + (index+1) + "</td>";
-      for(let jndex = 0; jndex < nodos.length; jndex++) { 
-          tabla += "<td>" + matrioska[index][jndex] + "</td>";
-      }
-      tabla += "</tr>";
-  }
-  tabla += "</table>";
-
-  document.querySelector(".matriz").innerHTML=tabla;
 }
 
-// Solo funciona en grafos lineales
-function caminos(conexion)  {
-  while (conexion < vinculos.length) {
-      conexion = vinculos[conexion].target.id;
-      console.log(conexion);
-      return caminos(conexion - 1);
+// Función para sumar Matrices
+function sumMatrices (matriz1, matriz2) {
+  var sum = 0;
+  for (let index = 0; index < matriz1.length; index++) {
+    for (let jndex = 0; jndex < matriz1.length; jndex++) {
+      sum = matriz1[index][jndex] + matriz2[index][jndex];
+      matrizRes[index][jndex] = sum;    
+    }
   }
-  return;
+  return matrizRes;
+}
+
+//Matriz M2 M3 M4
+function matrizCaminos(mcaminos) {
+  var sum = 0;
+  var matrixAux = [], mSum = [];
+  var n = nodos.length - 1;
+
+  for (let index = 0; index < mcaminos.length; index++) {
+    matrixAux[index] = [];
+    for (let jndex = 0; jndex < mcaminos[0].length; jndex++) {
+      for (let kndex = 0; kndex < mcaminos[0].length; kndex++) {
+        sum += mcaminos[index][kndex] * matrioska[kndex][jndex];
+      }
+      matrixAux[index][jndex] = sum;
+      sum = 0;
+    }
+  }
+  mcaminos = matrixAux;
+  caminocta++;
+  if (caminocta == n) {
+    c = sumMatrices(mIndentidad, mAnterior)
+    var matrizC = tabla(c); //Necesita arreglo si es que luego la matriz se hace más grande
+    document.querySelector(".matriz-c").innerHTML= matrizC;
+    mcaminos = [];
+    return caminocta = 0;
+  }
+  else {
+    mSum = sumMatrices(mcaminos, mAnterior)
+    mAnterior = mSum;
+    return matrizCaminos(mcaminos);
+  }
 }
 
 function tipoGrafo() {

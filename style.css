@@ -165,12 +165,15 @@ button[type="submit"]:active {
 }
 
 .propiedades {
+  cursor: pointer;
+}
+
+.propiedades, .matrizmenu, .na-nv, .label-c, .label-ady {
   background: #303030;
   display: block;
   text-align: center;
   border-bottom: 3px solid #252525;
   color: #e8e8e8;
-  cursor: pointer;
   font-weight: lighter;
 }
 .derecha {
@@ -179,7 +182,7 @@ button[type="submit"]:active {
   width: auto;
   min-width: 132px;
   z-index: 1;
-  height: auto;
+  height: 22px;
 }
 
 .derecha > p {
@@ -195,12 +198,33 @@ button[type="submit"]:active {
   cursor: pointer;
 }
 
-.matriz {
+.label-c, .label-ady {
+  display: none;
+}
+
+img[alt="mas"] {
+  display: block;
+}
+img[alt="menos"] {
+  display: none;
+}
+
+img[alt="mas"], img[alt="menos"] {
+  position: absolute;
+  filter: invert(.8);
+  width: 20px;
+  height: 20px;
+  margin-top: 1px;
+  cursor: pointer;
+}
+
+.matriz-ady, .matriz-c {
   width: auto;
   height: auto;
   background: #7d7d7d;
   margin: 8px;
   padding: 0 10px;
+  display: none;
 }
 
 .analisis > * {
