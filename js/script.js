@@ -23,9 +23,9 @@ var colores =  d3.schemeDark2;
 const uuid = Math.floor(Math.random() * 1e9);
 var mousedownNode = null;
 var tool = null, seleccion = null;
-var yoffset = 42, xoffset = 43;
-var w = window.innerWidth - xoffset, h = window.innerHeight - yoffset, radio = 12;
-var conexion = 0, caminocta = 0, vSimples = 0; 
+var yoffset = 42;
+var w = window.innerWidth, h = window.innerHeight - yoffset, radio = 12;
+var conexion = 0, caminocta = 0, vSimples = 0, region = 0;
 
 var svg = d3.select(".espacio")
 svg.attr("width", w).attr("height", h);
@@ -81,15 +81,57 @@ limpiarBtn.addEventListener("click", limpiarTodo);
 var acercaBtn = document.querySelector(".acerca");
 var modal = document.querySelector(".modal");
 var modalIng = document.querySelector(".modal-ingreso");
+var tutoIng = document.querySelector(".modal-tutorial");
 acercaBtn.addEventListener("click", e => {
   modal.style.display = "block";
 })
 window.onclick = function(e) {
-  if (e.target == modal || e.target == modalIng) {
+  if (e.target == modal || e.target == modalIng || e.target == tutoIng) {
     modal.style.display = "none";
     modalIng.style.display = "none";
+    tutoIng.style.display = "none";
   }
 }
+
+var imagenes = ['./img/crearg.gif','./img/link.gif','./img/simple.gif','./img/borrar.gif','./img/opciones.gif','./img/propiedades.gif'], cont=0;
+
+function imgTuto(aboutTitulo){
+  aboutTitulo.addEventListener('click', e =>{
+    let atras = aboutTitulo.querySelector('.atras'),
+        adelante = aboutTitulo.querySelector('.adelante'),
+        img = aboutTitulo.querySelector('img'),
+        tgt = e.target;
+
+      if(tgt == atras){
+        if(cont > 0){
+          img.src = imagenes[cont - 1];
+          cont= cont-1;
+        } else {
+            img.src = imagenes[imagenes.length - 1];
+            cont = imagenes.length - 1;
+          }
+      }else if (tgt == adelante){
+        if(cont < imagenes.length - 1){
+          img.src = imagenes[cont + 1];
+          cont=cont+1;
+        } else{
+            img.src = imagenes[0];
+            cont = 0;
+          }
+      }
+  });
+}
+
+document.addEventListener("DOMContentLoaded", ()=> {
+  let aboutTitulo=document.querySelector('.aboutTitulo');
+   imgTuto(aboutTitulo);
+});
+
+//Boton tutorial
+var tutorialBtn = document.querySelector(".tutorial");
+tutorialBtn.addEventListener("click", e => {
+  tutoIng.style.display = "block";
+});
 
 // Boton Visualizar
 var visualizarBtn = document.querySelector(".visualizar");
@@ -169,35 +211,11 @@ function mostrarFlechas() {
   }
 }
 
-// Boton Crear 
-var crearBtn = d3.select('button[name="crear"]');
-crearBtn.on("click", function(d) {
-  cambioTool("crear");
-  svg
-    .on("mousedown", añadirNodo)
-    .on("mousemove", updateDragLine)
-    .on("mouseup", hideDragLine)
-    .on("mouseleave", hideDragLine);
-});
-
-// Boton Mover
-var moverBtn = d3.select('button[name="mover"]');
-moverBtn.on("click", function(d) {
-  cambioTool("mover");
-//  vertices.on("mousedown", function(e) {
-//    console.log(e)
-//    seleccion = e;
-//    restart();
-//  });
-});
-
-// Boton Borrar
-var borrarBtn = d3.select('button[name="borrar"]');
-borrarBtn.on("click", function(d) {
-  cambioTool("borrar");
-//  vertices.on("mousedown", borrarNodo);
-//  aristas.on("mousedown", borrarNodo);
-});
+svg
+  .on("mousedown", añadirNodo)
+  .on("mousemove", updateDragLine)
+  .on("mouseup", hideDragLine)
+  .on("mouseleave", hideDragLine);
 
 // Actualiza la simulación
 function tick() {
@@ -503,6 +521,8 @@ function propiedades() {
   mAnterior = matrioska;
   matrizCaminos(matrioska);
   conexo();
+  //plano();
+  completo();
 }
 
 // Función para sumar Matrices
@@ -550,7 +570,6 @@ function matrizCaminos(mcaminos) {
 }
 
 function regiones() {
-  var region = 0;
   region = 2 - nodos.length + nVinculos(vinculosReales);
   document.querySelector(".region").innerHTML = region;
 }
@@ -585,6 +604,31 @@ function conexo() {
     conexo = true;
     conx.innerHTML = "Es conexo";
   }
+}
+
+function plano() {
+  var caras = region - 1;
+  plano = caras - nVinculos(vinculosReales) + nodos.length
+  if (plano ==  2) {
+    document.querySelector(".plano").innerHTML = "Es plano";
+  } 
+}
+
+function completo() {
+  var n = nodos.length;
+  if (((n * (n - 1)) / 2) == nVinculos(vinculosReales)) {
+    document.querySelector(".completo").innerHTML = "Es completo";
+  }
+}
+
+function mayorGrado() {
+  var grado = 0;
+  for (let index = 0; index < vinculosReales.length; index++) {
+   for (let jndex = 0; jndex < vinculosReales.length; jndex++) {
+     if (matrioska[index][jndex] === 1) grado++;
+   }
+  }
+  console.log(grado);
 }
 
 // Actualiza el grafo, vinculos y nodos

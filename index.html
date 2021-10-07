@@ -13,13 +13,36 @@
     <div class="header">
         <img class="logo" src="./img/graph.svg" alt="Logo">
         <button class="tutorial">Tutorial</button>
+        <div class="modal-tutorial">
+            <div class="tutorial-info">
+                <div class="tutorialTitulo">
+                    <span>Instrucciones de uso</span>
+                </div>
+                <div class="aboutTitulo">
+                    <div class="atras botones">
+                        &#60
+                    </div>
+                    <div class="adelante botones">
+                        &#62
+                    </div>
+                    <img class="visualIMG" src="./img/crearg.gif" alt="" id="imagen">
+                    <br>
+                    <div class="instrucciones">
+                        <span>Click izquierdo en el espacio para crear nodo.</span><br>
+                        <span>Click derecho sobre el nodo o arista para eliminarlo.</span><br>
+                        <span>Manten click izquierdo de un nodo a otro para crear una arista.</span><br>
+                        <span>Una ves creado el grafo has click en propiedades <br> para ver toda la informacion.</span>
+                    </div>
+                </div>
+            </div>
+        </div>
         <button class="crear activo">Crear</button>
         <button class="visualizar">Visualizar</button>
         <div class="modal-ingreso">
             <div class="ingreso">
                 <span class="ingheader">Ingreso de datos</span>
                 <div class="input-grafo">
-                    <input  type="text" placeholder="ejemplo: [[0,1],[1,2]] (debe partir de 0*)" name="ginput">
+                    <input  type="text" placeholder="ejemplo: [0,1],[1,2] (debe partir de 0*)" name="ginput">
                     <button type="submit">ingresar</button>
                 </div>
             </div>
@@ -47,17 +70,6 @@
             </div>
         </div>
     </div>
-    <div class="sidebar">
-        <button class="tool" name="mover">
-            <img class="ticon" src="./img/mover.png">
-        </button>
-        <button class="tool" name="crear">
-            <img class="ticon" src="./img/crear.png">
-        </button>
-        <button class="tool" name="borrar">
-            <img class="ticon" src="./img/borrar.png">
-        </button>
-    </div>
     <div class="sidebar derecha">
         <span class="propiedades">Propiedades</span>
         <div class="analisis">
@@ -68,7 +80,7 @@
             <span class="matrizmenu">Matrices</span>
             <span class="label-ady">Matriz Adyacente</span>
             <div class="matriz-ady"></div>
-            <span class="label-c">Matrices C</span>
+            <span class="label-c">Matriz C</span>
             <div class="matriz-c"></div>
         </div>
         <div class="na-nv">
@@ -81,18 +93,10 @@
             <span>Regiones</span>
             <span class="region"></span>
         </div>
-        <div class="tipo-grafo">
-            <span class="tipo"></span>
-        </div>
-        <div class="tipo-conexo">
-            <span class="conexo"></span>
-        </div>
-        <div class="tipo-grafo">
-            <span class="plano"></span>
-        </div>
-        <div class="tipo-grafo">
-            <span class="regular"></span>
-        </div>
+        <span class="tipo"></span>
+        <span class="conexo"></span>
+        <span class="plano"></span>
+        <span class="completo"></span>
     </div>
     <svg class="espacio">
     </svg>
