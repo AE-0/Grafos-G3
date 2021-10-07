@@ -25,7 +25,7 @@ var mousedownNode = null;
 var tool = null, seleccion = null;
 var yoffset = 42, xoffset = 43;
 var w = window.innerWidth - xoffset, h = window.innerHeight - yoffset, radio = 12;
-var conexion = 0, caminocta = 0, vinculadosSimples = -1; 
+var conexion = 0, caminocta = 0, vSimples = 0; 
 
 var svg = d3.select(".espacio")
 svg.attr("width", w).attr("height", h);
@@ -95,6 +95,7 @@ window.onclick = function(e) {
 var visualizarBtn = document.querySelector(".visualizar");
 visualizarBtn.addEventListener("click", e => {
   modalIng.style.display = "block";
+  limpiarTodo();
 });
 // Input Visualizar
 var inputGrafos = document.querySelector('input[name="ginput"]')
@@ -103,17 +104,32 @@ inputGrafos.addEventListener("onkeypress", e => {
   if (e.keyCode == 13) {ingresoDatos();}
 });
 var submit = document.querySelector('button[type="submit"]')
-submit.addEventListener("click", ingresoDatos)
+submit.addEventListener("click", e => {
+  modalIng.style.display = "none";
+  ingresoDatos();
+})
 
 // Ingreso de nodos por texto
 var stringcito;
 function ingresoDatos() {
   stringcito = inputGrafos.value;
   var stringNodos = inputGrafos.value;
-
-  regexRule = /\[[0-9],[0-9]\]/;
+  regexRule = /([\d],[\d])+/g;
   var arrayNodos = [...stringcito.match(regexRule)]
   console.log(arrayNodos);
+  var contador = 0;
+  while (contador < arrayNodos.length) {
+    var newNode = {id: contador};
+    nodos.push(newNode);
+    contador++;
+  }
+  for(let index = 0; index < arrayNodos.length; index++) {
+    var newLink = { source: parseInt(arrayNodos[index][0], 10), target: parseInt(arrayNodos[index][2], 10)};
+    vinculos.push(newLink);
+  }
+  restart();
+  console.log(vinculos);
+  console.log(nodos);
 }
 
 // Checkbox Numeros
@@ -227,6 +243,7 @@ function limpiarTodo() {
 
 // Boton Propiedades
 document.querySelector(".propiedades").addEventListener("click", propiedades);
+var labelre = document.querySelector(".region");
 var barraderecha = document.querySelector(".derecha");
 var nAristas = document.querySelector(".naristas");
 var nVertices = document.querySelector(".nvertices");
@@ -249,7 +266,13 @@ nAristas.addEventListener("mouseenter", e => {
     flecha.attr("stroke", "#999").attr("fill", "#999")
   }, 500)
 })
-
+// Hover Regiones
+labelre.addEventListener("mouseenter", e => {
+  d3.selectAll(".aristas")
+  setTimeout(function() {
+    d3.selectAll(".aristas")
+  }, 500)
+})
 
 // Remueve enventos del mouse anteriores
 function cambioTool(toolname) {
@@ -357,23 +380,18 @@ function endDragLine(d) {
   restart();
 }
 
-function nVinculos() {
-  var nvinculos = vinculosReales.length + 1;
-  var uno = 1, indexcta = 0, kndex = 0;
-  for (let index = 0; index < vinculoIndex.length; index++) {
-    kndex = index;
-    if (vinculoIndex[indexcta] == vinculosReales[index][uno]) {
-      index = 0;
-      for (let jndex = 0; jndex < 2; jndex++) {
-        if (vinculosReales[kndex][jndex] == vinculosReales[indexcta][uno]) {
-          nvinculos--;
-          vinculadosSimples++;
-        }
+function nVinculos(nvinculos) {
+  var cta = 0, zero = 0, uno = 1;
+  for (let i = 0; i < nvinculos.length; i++) {
+    for (let j = 0; j < nvinculos.length; j++) {
+      if(nvinculos[i][zero] === nvinculos[j][uno] && nvinculos[i][uno] === nvinculos[j][zero]) {
+        cta++;
       }
-      indexcta++;
     }
   }
-  return nvinculos;
+  vSimples = cta/2;
+  cta = nvinculos.length - vSimples; 
+  return(cta) 
 }
 
 function aristasVertices(){
@@ -385,7 +403,6 @@ function aristasVertices(){
     }
   }
   
-  console.table(vinculosReales);
   for (let index = 0; index < vinculosReales.length; index++) {
     for (let jndex = 0; jndex < vinculosReales.length; jndex++) {
       if (jndex == 0) {
@@ -393,7 +410,7 @@ function aristasVertices(){
       }
     }
   }
-  nAristas.innerHTML = nVinculos();
+  nAristas.innerHTML = nVinculos(vinculosReales);
   nVertices.innerHTML = nodos.length;
 }
 
@@ -421,12 +438,12 @@ function tabla(matriz) {
 }
 
 // Muestra las propiedades del grafo
-
 function propiedades() {
   
   barraderecha.style.height = "auto";
   
   aristasVertices();
+  regiones();
   
   for (let index = 0; index < vinculos.length; index++) {
     columm = vinculos[index];
@@ -522,17 +539,19 @@ function matrizCaminos(mcaminos) {
   }
 }
 
+function regiones() {
+  var region = 0;
+  region = 2 - nodos.length + nVinculos(vinculosReales);
+  document.querySelector(".region").innerHTML = region;
+}
+
 function tipoGrafo() {
-  for (let index = 0; index <= vinculos.length; index++) { 
-    var jndex = index + 1;
-    if (vinculos[index].source.id == vinculos[jndex].target.id) { //Se rompe si el orden de ingreso de los vinculos no es el esperado
-      continue;
-    } else {
-      console.log("Tipo dirigido");
-      return;
-    }
+  if (vinculos.length == nVinculos(vinculosReales)) {
+    console.log("Es dirigido");
   }
-  console.log("Es simple");
+  else {
+    console.log("Es simple");  
+  } 
 }
 
 // Actualiza el grafo, vinculos y nodos

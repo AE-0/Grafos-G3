@@ -168,7 +168,7 @@ button[type="submit"]:active {
   cursor: pointer;
 }
 
-.propiedades, .matrizmenu, .na-nv, .label-c, .label-ady {
+.propiedades, .matrizmenu, .na-nv, .label-c, .label-ady, .re {
   background: #303030;
   display: block;
   text-align: center;
@@ -216,6 +216,7 @@ img[alt="mas"], img[alt="menos"] {
   height: 20px;
   margin-top: 1px;
   cursor: pointer;
+  user-select: none;
 }
 
 .matriz-ady, .matriz-c {
