@@ -114,19 +114,29 @@ var stringcito;
 function ingresoDatos() {
   stringcito = inputGrafos.value;
   var stringNodos = inputGrafos.value;
+
   regexRule = /([\d],[\d])+/g;
   var arrayNodos = [...stringcito.match(regexRule)]
   console.log(arrayNodos);
-  var contador = 0;
-  while (contador < arrayNodos.length) {
+  contador=0;
+  test=arrayNodos.length+1;
+  while(contador<test){
     var newNode = {id: contador};
     nodos.push(newNode);
     contador++;
   }
-  for(let index = 0; index < arrayNodos.length; index++) {
-    var newLink = { source: parseInt(arrayNodos[index][0], 10), target: parseInt(arrayNodos[index][2], 10)};
+  /*for(let index = 0; index <= test; index++){
+    
+    var newNode = {id: contador};
+    nodos.push(newNode);
+    contador++;
+    
+  }*/
+  for(let iindex = 0; iindex < arrayNodos.length; iindex++){
+    var newLink = { source: parseInt(arrayNodos[iindex][0], 10), target: parseInt(arrayNodos[iindex][2], 10)};
     vinculos.push(newLink);
   }
+
   restart();
   console.log(vinculos);
   console.log(nodos);
@@ -434,7 +444,6 @@ function tabla(matriz) {
   tabla += "</table>";
 
   return tabla;
-
 }
 
 // Muestra las propiedades del grafo
@@ -444,6 +453,7 @@ function propiedades() {
   
   aristasVertices();
   regiones();
+  tipoGrafo();
   
   for (let index = 0; index < vinculos.length; index++) {
     columm = vinculos[index];
@@ -492,7 +502,7 @@ function propiedades() {
   document.querySelector(".matriz-ady").innerHTML = matrizAdy;
   mAnterior = matrioska;
   matrizCaminos(matrioska);
-  
+  conexo();
 }
 
 // Función para sumar Matrices
@@ -545,13 +555,36 @@ function regiones() {
   document.querySelector(".region").innerHTML = region;
 }
 
+var tipo = document.querySelector(".tipo");
+var conx = document.querySelector(".conexo");
+
 function tipoGrafo() {
   if (vinculos.length == nVinculos(vinculosReales)) {
-    console.log("Es dirigido");
+    tipo.innerHTML = "Es dirigido"
   }
-  else {
-    console.log("Es simple");  
+  if (vinculos.length / 2 == nVinculos(vinculosReales)) {
+    tipo.innerHTML = "Es Simple";
+  }
+  if (vinculos.length != nVinculos(vinculosReales) && vinculos.length / 2 != nVinculos(vinculosReales)) {
+    tipo.innerHTML = "Es multidigrafo";
   } 
+}
+
+function conexo() {
+  var conexo = null;
+  for (let index = 0; index < c.length; index++) {
+    for (let jndex = 0; jndex < c.length; jndex++) {
+      if (c[index][jndex] == 0) {
+        conexo = false;
+        conx.innerHTML = "Es diconexo";
+        break;
+      }
+    }
+  }
+  if (conexo == null) {
+    conexo = true;
+    conx.innerHTML = "Es conexo";
+  }
 }
 
 // Actualiza el grafo, vinculos y nodos

@@ -168,7 +168,7 @@ button[type="submit"]:active {
   cursor: pointer;
 }
 
-.propiedades, .matrizmenu, .na-nv, .label-c, .label-ady, .re {
+.propiedades, .matrizmenu, .na-nv, .label-c, .label-ady, .re, .tipo, .conexo {
   background: #303030;
   display: block;
   text-align: center;
