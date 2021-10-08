@@ -157,7 +157,8 @@ button[type="submit"]:active {
   cursor: pointer;
 }
 
-.propiedades, .matrizmenu, .na-nv, .label-c, .label-ady, .re, .tipo, .conexo, .plano, .completo {
+
+.propiedades, .matrizmenu, .na-nv, .label-c, .label-ady, .re, .tipo, .conexo, .plano, .completo, .ncroma, .regular, .circuito-eu, .grafo-eu, .camino-eu {
   background: #303030;
   display: block;
   text-align: center;

@@ -66,7 +66,7 @@ var force = d3
       .strength(-300)
       .distanceMax(w / 2)
   )
-  .force("link", d3.forceLink().distance(60))
+  .force("link", d3.forceLink().distance(80))
   .force("x", d3.forceX(w / 2))
   .force("y", d3.forceY(h / 2))
   .on("tick", tick);
@@ -159,11 +159,11 @@ function ingresoDatos() {
 
   regexRule = /([\d],[\d])+/g;
   var arrayNodos = [...stringcito.match(regexRule)]
-  console.log(arrayNodos);
+  //console.log(arrayNodos);
   contador=0;
   test=arrayNodos.length+1;
   while(contador<test){
-    var newNode = {id: contador};
+    var newNode = {id: contador, grado: 0};
     nodos.push(newNode);
     contador++;
   }
@@ -174,14 +174,17 @@ function ingresoDatos() {
     contador++;
     
   }*/
-  for(let iindex = 0; iindex < arrayNodos.length; iindex++){
+  for (let iindex = 0; iindex < arrayNodos.length; iindex++) {
     var newLink = { source: parseInt(arrayNodos[iindex][0], 10), target: parseInt(arrayNodos[iindex][2], 10)};
     vinculos.push(newLink);
   }
+  vinculos.filter(function(d) {
+    nodos[d.source].grado++;
+  });
 
   restart();
-  console.log(vinculos);
-  console.log(nodos);
+  //console.log(vinculos);
+  //console.log(nodos);
 }
 
 // Checkbox Numeros
@@ -294,13 +297,6 @@ nAristas.addEventListener("mouseenter", e => {
     flecha.attr("stroke", "#999").attr("fill", "#999")
   }, 500)
 })
-// Hover Regiones
-labelre.addEventListener("mouseenter", e => {
-  d3.selectAll(".aristas")
-  setTimeout(function() {
-    d3.selectAll(".aristas")
-  }, 500)
-})
 
 // Remueve enventos del mouse anteriores
 function cambioTool(toolname) {
@@ -332,7 +328,7 @@ function añadirNodo() {
   var e = d3.event;
   if (e.button == 0) {
     var coords = d3.mouse(e.currentTarget);
-    var newNode = { x: coords[0], y: coords[1], id: ++ultimoNodo };
+    var newNode = { x: coords[0], y: coords[1], id: ++ultimoNodo, grado: 0};
     nodos.push(newNode);
     restart();
   }
@@ -341,6 +337,7 @@ function añadirNodo() {
 function borrarNodo(d, i) {  
   nodos.splice(nodos.indexOf(d), 1);
   var vinculosToRemove = vinculos.filter(function(l) {
+    if ( typeof(d.source) !== "undefined") l.source.grado--;
     return l.source === d || l.target === d;
   });
   vinculosToRemove.map(function(l) {
@@ -351,6 +348,7 @@ function borrarNodo(d, i) {
 }
 
 function removeEdge(d, i) {
+  d.source.grado--;
   vinculos.splice(vinculos.indexOf(d), 1);
   d3.event.preventDefault();
   restart();
@@ -403,6 +401,7 @@ function endDragLine(d) {
     var l = vinculos[index];
     if (l.source === mousedownNode && l.target === d) return;
   }
+  mousedownNode.grado++;
   var newLink = { source: mousedownNode, target: d };
   vinculos.push(newLink);
   restart();
@@ -472,6 +471,9 @@ function propiedades() {
   aristasVertices();
   regiones();
   tipoGrafo();
+  nCromatico();
+  regular();
+  euleriano()
   
   for (let index = 0; index < vinculos.length; index++) {
     columm = vinculos[index];
@@ -621,14 +623,44 @@ function completo() {
   }
 }
 
-function mayorGrado() {
-  var grado = 0;
-  for (let index = 0; index < vinculosReales.length; index++) {
-   for (let jndex = 0; jndex < vinculosReales.length; jndex++) {
-     if (matrioska[index][jndex] === 1) grado++;
-   }
+function nCromatico() {
+  var mgrado = 0;
+  for (let index = 0; index < nodos.length; index++) {
+    if (nodos[index].grado > mgrado) {
+      mgrado = nodos[index].grado
+    }
   }
-  console.log(grado);
+  document.querySelector(".ncroma").innerHTML = "Numero cromatico " + (mgrado + 1);
+}
+
+function regular() {
+  var reg = true;
+  for (let index = 0; index < nodos.length; index++) {
+    if (nodos[index].grado != nodos[0].grado) {
+      reg = false
+      break;
+    }
+  }
+  if (reg == true) document.querySelector(".regular").innerHTML = "Es regular";
+  else document.querySelector(".regular").innerHTML = "No es regular";
+}
+
+function euleriano() {
+  var parcta = 0, imparcta = 0;
+  for (let index = 0; index < nodos.length; index++) {
+    if (nodos[index].grado % 2 == 0) parcta++;
+    else imparcta++;
+  }
+  if (parcta == nodos.length) {
+    document.querySelector(".circuito-eu").innerHTML = "Circuito Euleriano";
+    document.querySelector(".circuito-eu").style.display = "block !important";
+    document.querySelector(".grafo-eu").innerHTML = "Grafo Euleriano";
+    document.querySelector(".grafo-eu").style.display = "block !important";
+  }
+  if (imparcta == 2 && parcta == nodos.length - 2) {
+    document.querySelector(".camino-eu").innerHTML = "Camino Euleriano";
+    document.querySelector(".camino-eu").style.display = "block !important";
+  }
 }
 
 // Actualiza el grafo, vinculos y nodos
