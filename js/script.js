@@ -6,7 +6,7 @@ var ultimoNodo = nodos.length;
 var auxMatrix = [], matricita = [], matrioska = [], mIndentidad = [], mAnterior = [];
 var mcaminos = [], matrizRes = [], c = [];
 var columm = null;
-var colores =  d3.schemeDark2;
+var colores =  [ "#1b9e77", "#d95f02", "#7570b3", "#e7298a", "#66a61e", "#e6ab02", "#a6761d", "#db2d2d", "#382fa6", "#21abc1", "#602035" ];
 const uuid = Math.floor(Math.random() * 1e9);
 var mousedownNode = null;
 var tool = null, seleccion = null;
@@ -155,7 +155,7 @@ function ingresoDatos() {
 
   contador = 0;
   while (contador < arrayNodos.length + 1) {
-    var newNode = {id: contador, grado: 0};
+    var newNode = {id: contador, grado: 0, color: contador%10};
     nodos.push(newNode);
     contador++;
   }
@@ -310,7 +310,7 @@ function añadirNodo() {
   var e = d3.event;
   if (e.button == 0) {
     var coords = d3.mouse(e.currentTarget);
-    var newNode = { x: coords[0], y: coords[1], id: ++ultimoNodo, grado: 0};
+    var newNode = { x: coords[0], y: coords[1], id: ++ultimoNodo, grado: 0, color: ultimoNodo%10};
     nodos.push(newNode);
     restart();
   }
@@ -386,6 +386,7 @@ function endDragLine(d) {
   mousedownNode.grado++;
   var newLink = { source: mousedownNode, target: d };
   vinculos.push(newLink);
+  colorizacion(d);
   restart();
 }
 
@@ -660,6 +661,21 @@ function hamilton(){
   }
 }
 
+// Casi funcionando :<
+function colorizacion(d) {
+  var n1 = 'circle[n="', n2= '"]', n = null;
+  for (let index = 0; index < vinculos.length; index++) {
+    if (d.color == vinculos[vinculos.length - 1].source.color) {
+      d.color = vinculos.length;
+      n = n1 + d.id + n2;
+      d3.select(n).style("fill", function(l) {
+      if (d.color == Math.floor(Math.random() * 10) + 1) return;        
+        else return colores[Math.floor(Math.random() * 10) + 1]
+      })
+    }
+  }
+}
+
 // Actualiza el grafo, vinculos y nodos
 function restart() {
   aristas = aristas.data(vinculos, function(d) {
@@ -704,7 +720,12 @@ function restart() {
     
   ve.append("circle")
     .attr("r", radio)
-    .style("fill", "#d73380") // Añadir funcion de colores
+    .style("fill", function(d) {
+      return colores[d.color]
+    })
+    .attr("n", function(d) {
+      return d.id
+    })
     .append("title").text(function(d) {
       return "v" + d.id;
     });
