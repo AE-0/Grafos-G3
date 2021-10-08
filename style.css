@@ -161,7 +161,7 @@ button[type="submit"]:active {
   display: none;
 }
 
-.propiedades, .matrizmenu, .na-nv, .label-c, .label-ady, .re, .tipo, .conexo, .plano, .completo, .ncroma, .regular, .circuito-eu, .grafo-eu, .camino-eu {
+.propiedades, .matrizmenu, .na-nv, .label-c, .label-ady, .re, .tipo, .conexo, .plano, .completo, .ncroma, .regular, .circuito-eu, .grafo-eu, .camino-eu, .hamilton {
   background: #303030;
   display: block;
   text-align: center;
@@ -372,9 +372,15 @@ tr > :first-child {
   width: min-content;
   min-height: 46.5%;
 }
-.instrucciones {
+.instrucciones, .instrucciones-2 {
   text-align: center;
   position: relative;
   top: 15px;
   font-weight: lighter;
+}
+.instrucciones {
+  display: inline;
+}
+.instrucciones-2 {
+  display: none;
 }

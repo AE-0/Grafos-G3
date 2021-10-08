@@ -12,7 +12,7 @@ var mousedownNode = null;
 var tool = null, seleccion = null;
 var yoffset = 42;
 var w = window.innerWidth, h = window.innerHeight - yoffset, radio = 12;
-var conexion = 0, caminocta = 0, vSimples = 0, region = 0;
+var conexion = 0, caminocta = 0, vSimples = 0, region = 0, vmgrafo = 0;
 
 var svg = d3.select(".espacio")
 svg.attr("width", w).attr("height", h);
@@ -80,7 +80,7 @@ window.onclick = function(e) {
   }
 }
 
-var imagenes = ['./img/crearg.gif','./img/link.gif','./img/simple.gif','./img/borrar.gif','./img/opciones.gif','./img/propiedades.gif'], cont=0;
+var imagenes = ['./img/crearg.gif','./img/link.gif','./img/simple.gif','./img/borrar.gif','./img/opciones.gif','./img/propiedades.gif', './img/visual.gif'], cont = 0;
 
 function imgTuto(aboutTitulo){
   aboutTitulo.addEventListener('click', e =>{
@@ -89,22 +89,29 @@ function imgTuto(aboutTitulo){
         img = aboutTitulo.querySelector('img'),
         tgt = e.target;
 
-      if(tgt == atras){
+      if (tgt == atras) {
         if(cont > 0){
           img.src = imagenes[cont - 1];
-          cont= cont-1;
+          cont--;
         } else {
             img.src = imagenes[imagenes.length - 1];
             cont = imagenes.length - 1;
           }
-      }else if (tgt == adelante){
-        if(cont < imagenes.length - 1){
+      } else if (tgt == adelante) {
+        if (cont < imagenes.length - 1) {
           img.src = imagenes[cont + 1];
-          cont=cont+1;
+          cont++;
         } else{
             img.src = imagenes[0];
             cont = 0;
           }
+      }
+      if (cont == 6) {
+        document.querySelector(".instrucciones").style.display = "none";
+        document.querySelector(".instrucciones-2").style.display = "block";
+      } else {
+        document.querySelector(".instrucciones").style.display = "block";
+        document.querySelector(".instrucciones-2").style.display = "none";
       }
   });
 }
@@ -490,7 +497,7 @@ function propiedades() {
   var matrizAdy = tabla(matrioska);
   document.querySelector(".matriz-ady").innerHTML = matrizAdy;
   mAnterior = matrioska;
-  //matrizCaminos(matrioska); 
+  matrizCaminos(matrioska); 
   aristasVertices();
   regiones();
   if (vinculos.length == 0) {
@@ -499,7 +506,8 @@ function propiedades() {
   tipoGrafo();
   nCromatico();
   regular();
-  euleriano()
+  euleriano();
+  hamilton();
   conexo();
   grafoPlano();
   completo();
@@ -609,6 +617,7 @@ function nCromatico() {
   for (let index = 0; index < nodos.length; index++) {
     if (nodos[index].grado > mgrado) {
       mgrado = nodos[index].grado
+      vmgrafo = nodos[index].id
     }
   }
   document.querySelector(".ncroma").innerHTML = "Numero cromatico " + (mgrado + 1);
@@ -641,6 +650,13 @@ function euleriano() {
   if (imparcta == 2 && parcta == nodos.length - 2) {
     document.querySelector(".camino-eu").innerHTML = "Camino Euleriano";
     document.querySelector(".camino-eu").style.display = "block !important";
+  }
+}
+
+function hamilton(){
+  var grado1 = vmgrafo - 1;
+  if (nodos[grado1].grado + nodos[2].grado >= nodos.length - 1) {
+    document.querySelector(".hamilton").innerHTML = "Camino Hamiltoniano"
   }
 }
 
