@@ -1,16 +1,3 @@
-/*
-// Grafo hecho de ejemplo 
-var nodos = [{ id: 0 }, { id: 1 }, { id: 2 }, {id: 3}];
-
-var vinculos = [
-  { source: 0, target: 1 },
-  { source: 1, target: 0 },
-  { source: 1, target: 2 },
-  { source: 2, target: 0 },
-  { source: 3, target: 2 }
-];
-*/
-
 // Grafo vacio
 var nodos = [], vinculos = [];
 
@@ -152,28 +139,19 @@ submit.addEventListener("click", e => {
 })
 
 // Ingreso de nodos por texto
-var stringcito;
 function ingresoDatos() {
+  var stringcito;
   stringcito = inputGrafos.value;
-  var stringNodos = inputGrafos.value;
 
   regexRule = /([\d],[\d])+/g;
   var arrayNodos = [...stringcito.match(regexRule)]
-  //console.log(arrayNodos);
-  contador=0;
-  test=arrayNodos.length+1;
-  while(contador<test){
+
+  contador = 0;
+  while (contador < arrayNodos.length + 1) {
     var newNode = {id: contador, grado: 0};
     nodos.push(newNode);
     contador++;
   }
-  /*for(let index = 0; index <= test; index++){
-    
-    var newNode = {id: contador};
-    nodos.push(newNode);
-    contador++;
-    
-  }*/
   for (let iindex = 0; iindex < arrayNodos.length; iindex++) {
     var newLink = { source: parseInt(arrayNodos[iindex][0], 10), target: parseInt(arrayNodos[iindex][2], 10)};
     vinculos.push(newLink);
@@ -183,8 +161,6 @@ function ingresoDatos() {
   });
 
   restart();
-  //console.log(vinculos);
-  //console.log(nodos);
 }
 
 // Checkbox Numeros
@@ -247,6 +223,8 @@ function limpiarTodo() {
   vinculos.splice(0);
   ultimoNodo = 0;
   d3.selectAll("text").remove();
+  matrioska = [];
+  matricita = [];
   restart();
 }
 
@@ -313,12 +291,9 @@ function cambioTool(toolname) {
   
   vertices
     .on("mousedown", null)
-    //.on("mousemove", null)
-    //.on("mouseup", null);
 
   aristas
     .on("mousedown", null)
-    //.on("mousemove", null)
     .on("mouseup", null);
 
   restart();
@@ -421,7 +396,8 @@ function nVinculos(nvinculos) {
   return(cta) 
 }
 
-function aristasVertices(){
+function aristasVertices() {
+  vinculosReales = [];
   for (let index = 0; index < vinculos.length; index++) {
     for (let jndex = 0; jndex < vinculos.length; jndex++) {
       if (index == jndex) {
@@ -467,13 +443,6 @@ function tabla(matriz) {
 function propiedades() {
   
   barraderecha.style.height = "auto";
-  
-  aristasVertices();
-  regiones();
-  tipoGrafo();
-  nCromatico();
-  regular();
-  euleriano()
   
   for (let index = 0; index < vinculos.length; index++) {
     columm = vinculos[index];
@@ -521,9 +490,18 @@ function propiedades() {
   var matrizAdy = tabla(matrioska);
   document.querySelector(".matriz-ady").innerHTML = matrizAdy;
   mAnterior = matrioska;
-  matrizCaminos(matrioska);
+  //matrizCaminos(matrioska); 
+  aristasVertices();
+  regiones();
+  if (vinculos.length == 0) {
+    return
+  }
+  tipoGrafo();
+  nCromatico();
+  regular();
+  euleriano()
   conexo();
-  //plano();
+  grafoPlano();
   completo();
 }
 
@@ -559,7 +537,7 @@ function matrizCaminos(mcaminos) {
   caminocta++;
   if (caminocta == n) {
     c = sumMatrices(mIndentidad, mAnterior)
-    var matrizC = tabla(c); //Necesita arreglo si es que luego la matriz se hace más grande
+    var matrizC = tabla(c);
     document.querySelector(".matriz-c").innerHTML= matrizC;
     mcaminos = [];
     return caminocta = 0;
@@ -573,6 +551,7 @@ function matrizCaminos(mcaminos) {
 
 function regiones() {
   region = 2 - nodos.length + nVinculos(vinculosReales);
+  if (region < 1) region = 1;
   document.querySelector(".region").innerHTML = region;
 }
 
@@ -608,11 +587,12 @@ function conexo() {
   }
 }
 
-function plano() {
-  var caras = region - 1;
-  plano = caras - nVinculos(vinculosReales) + nodos.length
+function grafoPlano() {
+  var caras = region - 2;
+  plano = caras - nodos.length + nVinculos(vinculosReales)
   if (plano ==  2) {
     document.querySelector(".plano").innerHTML = "Es plano";
+    document.querySelector(".plan").style.display = "block";
   } 
 }
 
@@ -620,6 +600,7 @@ function completo() {
   var n = nodos.length;
   if (((n * (n - 1)) / 2) == nVinculos(vinculosReales)) {
     document.querySelector(".completo").innerHTML = "Es completo";
+    document.querySelector(".comp").style.display = "block";
   }
 }
 

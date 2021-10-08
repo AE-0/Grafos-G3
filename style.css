@@ -157,6 +157,9 @@ button[type="submit"]:active {
   cursor: pointer;
 }
 
+.plan, .comp {
+  display: none;
+}
 
 .propiedades, .matrizmenu, .na-nv, .label-c, .label-ady, .re, .tipo, .conexo, .plano, .completo, .ncroma, .regular, .circuito-eu, .grafo-eu, .camino-eu {
   background: #303030;
